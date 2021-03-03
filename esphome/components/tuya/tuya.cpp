@@ -9,7 +9,7 @@ static const char *TAG = "tuya";
 static const int COMMAND_DELAY = 50;
 
 void Tuya::setup() {
-  this->set_interval("heartbeat", 1000, [this] { this->send_empty_command_(TuyaCommandType::HEARTBEAT); });
+  this->set_interval("heartbeat", 10000, [this] { this->send_empty_command_(TuyaCommandType::HEARTBEAT); });
 }
 
 void Tuya::loop() {
@@ -313,7 +313,7 @@ void Tuya::send_raw_command_(TuyaCommand command) {
 
   this->last_command_timestamp_ = millis();
 
-  ESP_LOGV(TAG, "Sending Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u", command.cmd, version,  // NOLINT
+  ESP_LOGVV(TAG, "Sending Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u", command.cmd, version,  // NOLINT
            hexencode(command.payload).c_str(), this->init_state_);
 
   this->write_array({0x55, 0xAA, version, (uint8_t) command.cmd, len_hi, len_lo});

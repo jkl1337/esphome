@@ -282,6 +282,8 @@ class LightState : public Nameable, public Component {
 
   void current_values_as_cwww(float *cold_white, float *warm_white, bool constant_brightness = false);
 
+  bool has_transformer() const { return !!this->transformer_; };
+
  protected:
   friend LightOutput;
   friend LightCall;
