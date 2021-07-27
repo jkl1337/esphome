@@ -437,6 +437,19 @@ void Tuya::send_local_time_() {
 }
 #endif
 
+void Tuya::set_datapoint_bool(uint8_t datapoint_id, bool value) {
+  ESP_LOGD(TAG, "Setting datapoint %u to %u", datapoint_id, value);
+  optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
+  if (!datapoint.has_value()) {
+    ESP_LOGE(TAG, "Attempt to set unknown datapoint %u", datapoint_id);
+  }
+  else if (datapoint->value_uint == value) {
+    ESP_LOGV(TAG, "Not sending unchanged value");
+    return;
+  }
+  this->send_datapoint_command_(datapoint_id, TuyaDatapointType::BOOLEAN, { value });
+}
+
 void Tuya::set_datapoint_value(uint8_t datapoint_id, uint32_t value) {
   ESP_LOGD(TAG, "Setting datapoint %u to %u", datapoint_id, value);
   optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
@@ -472,7 +485,7 @@ void Tuya::set_datapoint_value(uint8_t datapoint_id, const std::string &value) {
   if (!datapoint.has_value()) {
     ESP_LOGE(TAG, "Attempt to set unknown datapoint %u", datapoint_id);
   }
-  if (datapoint->value_string == value) {
+  else if (datapoint->value_string == value) {
     ESP_LOGV(TAG, "Not sending unchanged value");
     return;
   }
@@ -480,7 +493,7 @@ void Tuya::set_datapoint_value(uint8_t datapoint_id, const std::string &value) {
   for (char const &c : value) {
     data.push_back(c);
   }
-  this->send_datapoint_command_(datapoint->id, datapoint->type, data);
+  this->send_datapoint_command_(datapoint_id, TuyaDatapointType::STRING, data);
 }
 
 optional<TuyaDatapoint> Tuya::get_datapoint_(uint8_t datapoint_id) {
