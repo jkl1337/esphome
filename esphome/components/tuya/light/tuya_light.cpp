@@ -66,7 +66,7 @@ void TuyaLight::write_state(light::LightState *state) {
   if (brightness == 0.0f) {
     // turning off, first try via switch (if exists), then dimmer
     if (switch_id_.has_value()) {
-      parent_->set_datapoint_value(*this->switch_id_, false);
+      parent_->set_datapoint_bool(*this->switch_id_, false);
     } else if (dimmer_id_.has_value()) {
       parent_->set_datapoint_value(*this->dimmer_id_, 0);
     }
@@ -88,7 +88,7 @@ void TuyaLight::write_state(light::LightState *state) {
     parent_->set_datapoint_value(*this->dimmer_id_, brightness_int);
   }
   if (this->switch_id_.has_value()) {
-    parent_->set_datapoint_value(*this->switch_id_, true);
+    parent_->set_datapoint_bool(*this->switch_id_, true);
   }
 }
 
