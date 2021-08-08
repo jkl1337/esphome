@@ -7,6 +7,8 @@ namespace tuya {
 
 static const char *const TAG = "tuya.light";
 
+static const float MIN_INPUT_BRI = 3 / 255.0;
+
 void TuyaLight::setup() {
   if (this->color_temperature_id_.has_value()) {
     this->parent_->register_listener(*this->color_temperature_id_, [this](const TuyaDatapoint &datapoint) {
@@ -34,7 +36,8 @@ void TuyaLight::setup() {
       }
 
       auto call = this->state_->make_call();
-      call.set_brightness(float(datapoint.value_uint) / this->max_value_);
+      auto val = std::max(this->min_value_, datapoint.value_uint) - this->min_value_;
+      call.set_brightness(val * (1.0f - MIN_INPUT_BRI) / (this->max_value_ - this->min_value_) + MIN_INPUT_BRI);
       call.perform();
     });
   }
@@ -178,8 +181,10 @@ void TuyaLight::write_state(light::LightState *state) {
     }
 
     if (this->dimmer_id_.has_value()) {
-      auto brightness_int = static_cast<uint32_t>(brightness * this->max_value_);
-      brightness_int = std::max(brightness_int, this->min_value_);
+      auto clamped_brightness = std::max(0.0f, brightness - MIN_INPUT_BRI);
+      auto brightness_int =
+          uint32_t(std::round(clamped_brightness * (this->max_value_ - this->min_value_) / (1.0f - MIN_INPUT_BRI))) +
+          this->min_value_;
 
       this->parent_->set_integer_datapoint_value(*this->dimmer_id_, brightness_int);
     }
