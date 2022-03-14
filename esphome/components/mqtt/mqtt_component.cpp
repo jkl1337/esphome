@@ -86,6 +86,8 @@ bool MQTTComponent::send_discovery_() {
           case ENTITY_CATEGORY_DIAGNOSTIC:
             root[MQTT_ENTITY_CATEGORY] = "diagnostic";
             break;
+          case ENTITY_CATEGORY_SYSTEM:
+            root[MQTT_ENTITY_CATEGORY] = "system";
         }
 
         if (config.state_topic)

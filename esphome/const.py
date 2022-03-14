@@ -953,3 +953,6 @@ ENTITY_CATEGORY_CONFIG = "config"
 
 # The entity category for read only diagnostic values, for example RSSI, uptime or MAC Address
 ENTITY_CATEGORY_DIAGNOSTIC = "diagnostic"
+
+# The entity category for entities not useful for user interaction
+ENTITY_CATEGORY_SYSTEM = "system"

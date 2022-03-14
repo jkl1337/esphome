@@ -214,6 +214,7 @@ enum EntityCategory {
   ENTITY_CATEGORY_NONE = 0;
   ENTITY_CATEGORY_CONFIG = 1;
   ENTITY_CATEGORY_DIAGNOSTIC = 2;
+  ENTITY_CATEGORY_SYSTEM = 3;
 }
 
 // ==================== BINARY SENSOR ====================
@@ -991,7 +992,7 @@ message ListEntitiesLockResponse {
   bool supports_open = 9;
   bool requires_code = 10;
 
-  # Not yet implemented:
+  // Not yet implemented:
   string code_format = 11;
 }
 message LockStateResponse {
@@ -1010,7 +1011,7 @@ message LockCommandRequest {
   fixed32 key = 1;
   LockCommand command = 2;
 
-  # Not yet implemented:
+  // Not yet implemented:
   bool has_code = 3;
   string code = 4;
 }
